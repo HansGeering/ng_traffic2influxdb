@@ -1,0 +1,18 @@
+version: "3"
+
+services:
+  server:
+    image: hansgeering/ng_traffic2influxdb
+    container_name: ng_traffic2influxdb
+    environment:
+      - HOST = '10.0.0.1'
+      - USERNAME = 'admin'
+      - PASSWORD = 'password'
+      - INTERFACE = 'ppp0'
+      - INFLUXDB_HOST = 'localhost'
+      - INFLUXDB_PORT = 8086
+      - INFLUXDB_USER = 'admin'
+      - INFLUXDB_PASS = 'password'
+      - INFLUXDB_DB = 'telegraf'
+      - INFLUXDB_NAME = 'orbi'
+    restart: always
