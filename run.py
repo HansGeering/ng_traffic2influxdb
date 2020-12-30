@@ -44,7 +44,7 @@ def read_and_submit_data():
   tn.write(USERNAME.encode('ascii') + b"\n")
   tn.read_until(b"Password: ")
   tn.write(PASSWORD.encode('ascii') + b"\n")
-  tn.read_until(b"RBR40:/# ")
+  tn.read_until(b":/# ")
   tn.write(b"ifconfig " + INTERFACE.encode('ascii') + b"\n")
   tn.write(b"exit\n")
   if_data = tn.read_all().decode('ascii')
