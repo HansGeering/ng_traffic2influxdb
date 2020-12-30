@@ -5,10 +5,10 @@ services:
     image: hansgeering/ng_traffic2influxdb
     container_name: ng_traffic2influxdb
     environment:
-      - HOST = '10.0.0.1'
-      - USERNAME = 'admin'
-      - PASSWORD = 'password'
-      - INTERFACE = 'ppp0'
+      - ROUTER_HOST = '10.0.0.1'
+      - ROUTER_USER = 'admin'
+      - ROUTER_PASS = 'password'
+      - ROUTER_IF = 'ppp0'
       - INFLUXDB_HOST = 'localhost'
       - INFLUXDB_PORT = 8086
       - INFLUXDB_USER = 'admin'

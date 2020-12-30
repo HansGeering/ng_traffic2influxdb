@@ -1,7 +1,9 @@
 import requests, re, telnetlib
-import datetime, time, os
+import datetime, time, os, logging
 from influxdb import InfluxDBClient
 from requests.auth import HTTPBasicAuth
+
+logging.basicConfig(format='[%(asctime)s] %(message)s', level=logging.DEBUG)
 
 HOST = os.environ['ROUTER_HOST']
 USERNAME = os.environ['ROUTER_USER']
@@ -17,11 +19,12 @@ INFLUXDB_NAME = os.environ['INFLUXDB_NAME']
 
 def main():
   while True:
-    #print('Running...')
+    logging.info('Running...')
     read_and_submit_data()
     time.sleep(10)
 
 def enable_telnet():
+	logging.info('Enabling telnet...')
 	r = requests.get('http://10.0.0.1/debug_detail.htm', auth=HTTPBasicAuth(USERNAME, PASSWORD))
 	data = r.text
 	ts = re.search('ts="(\d+)"', data)[1]
@@ -42,14 +45,13 @@ def read_and_submit_data():
   tn.read_until(b"Password: ")
   tn.write(PASSWORD.encode('ascii') + b"\n")
   tn.read_until(b"RBR40:/# ")
-  tn.write(b"ifconfig " + INTERFACE + "\n")
+  tn.write(b"ifconfig " + INTERFACE.encode('ascii') + b"\n")
   tn.write(b"exit\n")
   if_data = tn.read_all().decode('ascii')
 
   rx = re.search('RX bytes:(\d+) ', if_data)[1]
   tx = re.search('TX bytes:(\d+) ', if_data)[1]
-  #print(rx, tx)
-  #exit()
+  logging.info("RX: " + rx + " TX: " + tx)
 
   client = InfluxDBClient(INFLUXDB_HOST, INFLUXDB_PORT, INFLUXDB_USER, INFLUXDB_PASS, INFLUXDB_DB)
   time = datetime.datetime.utcnow().isoformat()
